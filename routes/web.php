@@ -42,7 +42,7 @@ Route::resource('payments', PaymentController::class);
 Route::resource('letters', LetterController::class);
 
 // Gcash Routes
-Route::get('gcash/confirmation', [GcashController::class, 'confirmation'])->name('gcash.confirmation');
+Route::get('gcash/confirmation/{order_id}', [GcashController::class, 'confirmation'])->name('gcash.confirmation');
 Route::get('gcash/payment', [GcashController::class, 'payment'])->name('gcash.payment');
 Route::get('gcash/orders', [GcashController::class, 'orders'])->name('gcash.orders');
 Route::get('gcash/receipt', [GcashController::class, 'receipt'])->name('gcash.receipt');

@@ -112,7 +112,7 @@ class PaymentController extends BaseController
 
             // Redirect based on payment method
             if ($validated['payment_method'] === 'GCASH') {
-                return redirect()->route('gcash.confirmation')
+                return redirect()->route('gcash.confirmation', ['order_id' => $order->id])
                     ->with('success', 'GCash payment recorded successfully.');
             }
 

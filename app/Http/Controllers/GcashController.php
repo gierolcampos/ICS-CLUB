@@ -11,15 +11,15 @@ class GcashController extends Controller
     /**
      * Display the Gcash payment confirmation page.
      */
-    public function confirmation()
+    public function confirmation($order_id)
     {
         $order = null;
         
         if (Auth::check()) {
-            // Get the most recent GCASH order for authenticated user
+            // Get the specific GCASH order for authenticated user
             $order = Order::where('user_id', Auth::id())
                     ->where('method', 'GCASH')
-                    ->orderBy('id', 'desc')
+                    ->where('id', $order_id)
                     ->first();
         } else if (session('last_order_id')) {
             // Get the order from session for guest users
@@ -68,21 +68,24 @@ class GcashController extends Controller
      */
     public function receipt()
     {
-        $order = null;
+        $orders = collect();
         
         if (Auth::check()) {
-            // Get the most recent GCASH order for authenticated user
-            $order = Order::where('user_id', Auth::id())
+            // Get all GCASH orders for authenticated user
+            $orders = Order::where('user_id', Auth::id())
                     ->where('method', 'GCASH')
                     ->orderBy('id', 'desc')
-                    ->first();
+                    ->get();
         } else if (session('last_order_id')) {
             // Get the order from session for guest users
             $order = Order::where('id', session('last_order_id'))
                     ->where('method', 'GCASH')
                     ->first();
+            if ($order) {
+                $orders = collect([$order]);
+            }
         }
                     
-        return view('payments.customer_gcash_receipt', compact('order'));
+        return view('payments.customer_gcash_receipt', compact('orders'));
     }
 } 
